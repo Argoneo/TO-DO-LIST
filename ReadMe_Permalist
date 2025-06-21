@@ -1,0 +1,54 @@
+To-Do List Web App
+This project is a dynamic to-do list web application that allows users to add, edit, and delete tasks.
+It uses a PostgreSQL database to persist data, making it a full-stack CRUD application.
+TABLE OF CONTENT
+
+Overview
+  - The challenge
+  - Links
+
+My process
+  - Built with
+  - What I learned
+
+Author
+
+OVERVIEW 
+
+- The challenge
+
+  Users should be able to:
+    - View a clean, styled list of tasks
+    - Add new tasks to the list
+    - Edit existing tasks
+    - Delete tasks using a checkbox
+    - Persist data in a PostgreSQL database
+    - Experience a smooth UI with immediate feedback
+
+- Links
+    - GitHub: https://github.com/Argoneo
+
+- My process
+  - Built with
+    - HTML
+    - CSS3
+    - JavaScript (ES6)
+    - Node.js
+    - Express.js
+    - EJS templating
+    - PostgreSQL
+    - dotenv (for environment variable management)
+    - MVC pattern and RESTful routes
+    - Fully responsive UI
+
+- What I learned
+  - How to set up a Node.js and Express server
+  - How to integrate PostgreSQL with Express using pg
+  - How to use EJS to render dynamic views
+  - How to structure a RESTful CRUD application
+  - How to manage form submissions and user input
+  - How to hide and manage environment variables using dotenv
+  - How to handle real-time interaction with forms using JavaScript
+
+Author
+GitHub – @Argoneo

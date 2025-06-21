@@ -1,0 +1,90 @@
+{
+    "sourceFile": "index.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 18,
+            "patches": [
+                {
+                    "date": 1750239395414,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1750239445392,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,108 +1,74 @@\n import express from \"express\";\n import bodyParser from \"body-parser\";\n+import pg from \"pg\";\n \n const app = express();\n const port = 3000;\n \n+const db = new pg.Client({\n+  user: \"postgres\",\n+  host: \"localhost\",\n+  database: \"permalist\",\n+  password: \"pMimirPapa23$\",\n+  port: 5432,\n+});\n+db.connect();\n+\n app.use(bodyParser.urlencoded({ extended: true }));\n app.use(express.static(\"public\"));\n \n let items = [\n-  { id: 1, title: \"Buy milk\" },import express from \"express\";\n-  import bodyParser from \"body-parser\";\n-  import pg from \"pg\";\n-  \n-  const app = express();\n-  const port = 3000;\n-  \n-  const db = new pg.Client({\n-    user: \"postgres\",\n-    host: \"localhost\",\n-    database: \"permalist\",\n-    password: \"pMimirPapa23$\",\n-    port: 5432,\n-  });\n-  db.connect();\n-  \n-  app.use(bodyParser.urlencoded({ extended: true }));\n-  app.use(express.static(\"public\"));\n-  \n-  let items = [\n-    { id: 1, title: \"Buy milk\" },\n-    { id: 2, title: \"Finish homework\" },\n-  ];\n-  \n-  app.get(\"/\", async (req, res) => {\n-    try {\n-      const result = await db.query(\"SELECT * FROM items ORDER BY id ASC\");\n-      items = result.rows;\n-  \n-      res.render(\"index.ejs\", {\n-        listTitle: \"Today\",\n-        listItems: items,\n-      });\n-    } catch (err) {\n-      console.log(err);\n-    }\n-  });\n-  \n-  app.post(\"/add\", async (req, res) => {\n-    const item = req.body.newItem;\n-    // items.push({title: item});\n-    try {\n-      await db.query(\"INSERT INTO items (title) VALUES ($1)\", [item]);\n-      res.redirect(\"/\");\n-    } catch (err) {\n-      console.log(err);\n-    }\n-  });\n-  \n-  app.post(\"/edit\", async (req, res) => {\n-    const item = req.body.updatedItemTitle;\n-    const id = req.body.updatedItemId;\n-  \n-    try {\n-      await db.query(\"UPDATE items SET title = ($1) WHERE id = $2\", [item, id]);\n-      res.redirect(\"/\");\n-    } catch (err) {\n-      console.log(err);\n-    }\n-  });\n-  \n-  app.post(\"/delete\", async (req, res) => {\n-    const id = req.body.deleteItemId;\n-    try {\n-      await db.query(\"DELETE FROM items WHERE id = $1\", [id]);\n-      res.redirect(\"/\");\n-    } catch (err) {\n-      console.log(err);\n-    }\n-  });\n-  \n-  app.listen(port, () => {\n-    console.log(`Server running on port ${port}`);\n-  });\n-  \n+  { id: 1, title: \"Buy milk\" },\n   { id: 2, title: \"Finish homework\" },\n ];\n \n-app.get(\"/\", (req, res) => {\n-  res.render(\"index.ejs\", {\n-    listTitle: \"Today\",\n-    listItems: items,\n-  });\n+app.get(\"/\", async (req, res) => {\n+  try {\n+    const result = await db.query(\"SELECT * FROM items ORDER BY id ASC\");\n+    items = result.rows;\n+\n+    res.render(\"index.ejs\", {\n+      listTitle: \"Today\",\n+      listItems: items,\n+    });\n+  } catch (err) {\n+    console.log(err);\n+  }\n });\n \n-app.post(\"/add\", (req, res) => {\n+app.post(\"/add\", async (req, res) => {\n   const item = req.body.newItem;\n-  items.push({ title: item });\n-  res.redirect(\"/\");\n+  // items.push({title: item});\n+  try {\n+    await db.query(\"INSERT INTO items (title) VALUES ($1)\", [item]);\n+    res.redirect(\"/\");\n+  } catch (err) {\n+    console.log(err);\n+  }\n });\n \n-app.post(\"/edit\", (req, res) => {});\n+app.post(\"/edit\", async (req, res) => {\n+  const item = req.body.updatedItemTitle;\n+  const id = req.body.updatedItemId;\n \n-app.post(\"/delete\", (req, res) => {});\n+  try {\n+    await db.query(\"UPDATE items SET title = ($1) WHERE id = $2\", [item, id]);\n+    res.redirect(\"/\");\n+  } catch (err) {\n+    console.log(err);\n+  }\n+});\n \n+app.post(\"/delete\", async (req, res) => {\n+  const id = req.body.deleteItemId;\n+  try {\n+    await db.query(\"DELETE FROM items WHERE id = $1\", [id]);\n+    res.redirect(\"/\");\n+  } catch (err) {\n+    console.log(err);\n+  }\n+});\n+\n app.listen(port, () => {\n   console.log(`Server running on port ${port}`);\n });\n"
+                },
+                {
+                    "date": 1750239924091,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -8,9 +8,9 @@\n const db = new pg.Client({\n   user: \"postgres\",\n   host: \"localhost\",\n   database: \"permalist\",\n-  password: \"pMimirPapa23$\",\n+  password: PASSWORD_DB,\n   port: 5432,\n });\n db.connect();\n \n"
+                },
+                {
+                    "date": 1750239930017,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,8 @@\n import express from \"express\";\n import bodyParser from \"body-parser\";\n import pg from \"pg\";\n+im\n \n const app = express();\n const port = 3000;\n \n"
+                },
+                {
+                    "date": 1750239977113,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,9 +1,10 @@\n import express from \"express\";\n import bodyParser from \"body-parser\";\n import pg from \"pg\";\n-im\n+import env \n \n+\n const app = express();\n const port = 3000;\n \n const db = new pg.Client({\n"
+                },
+                {
+                    "date": 1750239982447,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,8 @@\n import express from \"express\";\n import bodyParser from \"body-parser\";\n import pg from \"pg\";\n-import env \n+import env from \"\"\n \n \n const app = express();\n const port = 3000;\n"
+                },
+                {
+                    "date": 1750239988793,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,8 @@\n import express from \"express\";\n import bodyParser from \"body-parser\";\n import pg from \"pg\";\n-import env from \"\"\n+import env from \"env\"\n \n \n const app = express();\n const port = 3000;\n"
+                },
+                {
+                    "date": 1750240044386,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,9 @@\n import express from \"express\";\n import bodyParser from \"body-parser\";\n import pg from \"pg\";\n-import env from \"env\"\n+import dotenv from 'dotenv';\n+dotenv.config();\n \n \n const app = express();\n const port = 3000;\n"
+                },
+                {
+                    "date": 1750240052350,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -11,9 +11,9 @@\n const db = new pg.Client({\n   user: \"postgres\",\n   host: \"localhost\",\n   database: \"permalist\",\n-  password: PASSWORD_DB,\n+  password: processPASSWORD_DB,\n   port: 5432,\n });\n db.connect();\n \n"
+                },
+                {
+                    "date": 1750240059614,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -11,9 +11,9 @@\n const db = new pg.Client({\n   user: \"postgres\",\n   host: \"localhost\",\n   database: \"permalist\",\n-  password: processPASSWORD_DB,\n+  password: process.env.PASSWORD_DB,\n   port: 5432,\n });\n db.connect();\n \n"
+                },
+                {
+                    "date": 1750240106136,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,8 @@\n import express from \"express\";\n import bodyParser from \"body-parser\";\n import pg from \"pg\";\n-import dotenv from 'dotenv';\n+import dotenv from \"dotenv';\n dotenv.config();\n \n \n const app = express();\n"
+                },
+                {
+                    "date": 1750240182815,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,8 @@\n import express from \"express\";\n import bodyParser from \"body-parser\";\n import pg from \"pg\";\n-import dotenv from \"dotenv';\n+import dotenv from \"dotenv\";\n dotenv.config();\n \n \n const app = express();\n"
+                },
+                {
+                    "date": 1750240321318,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -2,10 +2,8 @@\n import bodyParser from \"body-parser\";\n import pg from \"pg\";\n import dotenv from \"dotenv\";\n dotenv.config();\n-\n-\n const app = express();\n const port = 3000;\n \n const db = new pg.Client({\n"
+                },
+                {
+                    "date": 1750240600373,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -2,15 +2,16 @@\n import bodyParser from \"body-parser\";\n import pg from \"pg\";\n import dotenv from \"dotenv\";\n dotenv.config();\n+\n const app = express();\n const port = 3000;\n \n const db = new pg.Client({\n   user: \"postgres\",\n   host: \"localhost\",\n-  database: \"permalist\",\n+  database: process.env.PASSWORD_DB,\n   password: process.env.PASSWORD_DB,\n   port: 5432,\n });\n db.connect();\n"
+                },
+                {
+                    "date": 1750240607662,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -7,13 +7,13 @@\n const app = express();\n const port = 3000;\n \n const db = new pg.Client({\n-  user: \"postgres\",\n-  host: \"localhost\",\n+  user: process.env.PASSWORD_DB,\n+  host: process.env.PASSWORD_DB,\n   database: process.env.PASSWORD_DB,\n   password: process.env.PASSWORD_DB,\n-  port: 5432,\n+  port: process.env.PASSWORD_DB,\n });\n db.connect();\n \n app.use(bodyParser.urlencoded({ extended: true }));\n"
+                },
+                {
+                    "date": 1750240622320,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -7,9 +7,9 @@\n const app = express();\n const port = 3000;\n \n const db = new pg.Client({\n-  user: process.env.PASSWORD_DB,\n+  user: process.env.USER_DB,\n   host: process.env.PASSWORD_DB,\n   database: process.env.PASSWORD_DB,\n   password: process.env.PASSWORD_DB,\n   port: process.env.PASSWORD_DB,\n"
+                },
+                {
+                    "date": 1750240634541,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -8,9 +8,9 @@\n const port = 3000;\n \n const db = new pg.Client({\n   user: process.env.USER_DB,\n-  host: process.env.PASSWORD_DB,\n+  host: process.env.HOST,\n   database: process.env.PASSWORD_DB,\n   password: process.env.PASSWORD_DB,\n   port: process.env.PASSWORD_DB,\n });\n"
+                },
+                {
+                    "date": 1750240648746,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -9,9 +9,9 @@\n \n const db = new pg.Client({\n   user: process.env.USER_DB,\n   host: process.env.HOST,\n-  database: process.env.PASSWORD_DB,\n+  database: process.env.DB,\n   password: process.env.PASSWORD_DB,\n   port: process.env.PASSWORD_DB,\n });\n db.connect();\n"
+                },
+                {
+                    "date": 1750240661065,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -11,9 +11,9 @@\n   user: process.env.USER_DB,\n   host: process.env.HOST,\n   database: process.env.DB,\n   password: process.env.PASSWORD_DB,\n-  port: process.env.PASSWORD_DB,\n+  port: process.env.PORT_DB,\n });\n db.connect();\n \n app.use(bodyParser.urlencoded({ extended: true }));\n"
+                }
+            ],
+            "date": 1750239395414,
+            "name": "Commit-0",
+            "content": "import express from \"express\";\nimport bodyParser from \"body-parser\";\n\nconst app = express();\nconst port = 3000;\n\napp.use(bodyParser.urlencoded({ extended: true }));\napp.use(express.static(\"public\"));\n\nlet items = [\n  { id: 1, title: \"Buy milk\" },import express from \"express\";\n  import bodyParser from \"body-parser\";\n  import pg from \"pg\";\n  \n  const app = express();\n  const port = 3000;\n  \n  const db = new pg.Client({\n    user: \"postgres\",\n    host: \"localhost\",\n    database: \"permalist\",\n    password: \"pMimirPapa23$\",\n    port: 5432,\n  });\n  db.connect();\n  \n  app.use(bodyParser.urlencoded({ extended: true }));\n  app.use(express.static(\"public\"));\n  \n  let items = [\n    { id: 1, title: \"Buy milk\" },\n    { id: 2, title: \"Finish homework\" },\n  ];\n  \n  app.get(\"/\", async (req, res) => {\n    try {\n      const result = await db.query(\"SELECT * FROM items ORDER BY id ASC\");\n      items = result.rows;\n  \n      res.render(\"index.ejs\", {\n        listTitle: \"Today\",\n        listItems: items,\n      });\n    } catch (err) {\n      console.log(err);\n    }\n  });\n  \n  app.post(\"/add\", async (req, res) => {\n    const item = req.body.newItem;\n    // items.push({title: item});\n    try {\n      await db.query(\"INSERT INTO items (title) VALUES ($1)\", [item]);\n      res.redirect(\"/\");\n    } catch (err) {\n      console.log(err);\n    }\n  });\n  \n  app.post(\"/edit\", async (req, res) => {\n    const item = req.body.updatedItemTitle;\n    const id = req.body.updatedItemId;\n  \n    try {\n      await db.query(\"UPDATE items SET title = ($1) WHERE id = $2\", [item, id]);\n      res.redirect(\"/\");\n    } catch (err) {\n      console.log(err);\n    }\n  });\n  \n  app.post(\"/delete\", async (req, res) => {\n    const id = req.body.deleteItemId;\n    try {\n      await db.query(\"DELETE FROM items WHERE id = $1\", [id]);\n      res.redirect(\"/\");\n    } catch (err) {\n      console.log(err);\n    }\n  });\n  \n  app.listen(port, () => {\n    console.log(`Server running on port ${port}`);\n  });\n  \n  { id: 2, title: \"Finish homework\" },\n];\n\napp.get(\"/\", (req, res) => {\n  res.render(\"index.ejs\", {\n    listTitle: \"Today\",\n    listItems: items,\n  });\n});\n\napp.post(\"/add\", (req, res) => {\n  const item = req.body.newItem;\n  items.push({ title: item });\n  res.redirect(\"/\");\n});\n\napp.post(\"/edit\", (req, res) => {});\n\napp.post(\"/delete\", (req, res) => {});\n\napp.listen(port, () => {\n  console.log(`Server running on port ${port}`);\n});\n"
+        }
+    ]
+}
