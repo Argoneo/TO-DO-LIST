@@ -30,7 +30,28 @@ let items = [
   { id: 1, title: "Buy milk" },
   { id: 2, title: "Finish homework" },
 ];
+import pg from 'pg';
 
+const { Pool } = pg;
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
+
+async function testConnection() {
+  try {
+    const client = await pool.connect();
+    console.log('Connesso al database!');
+    client.release();
+  } catch (error) {
+    console.error('Errore nella connessione al database:', error);
+  }
+}
+
+testConnection();
 // Route: Display the list page
 app.get("/", async (req, res) => {
   try {
